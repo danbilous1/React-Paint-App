@@ -3,6 +3,8 @@ import { useState } from "react";
 import Form from "./components/Form";
 import Square from "./components/Square";
 
+const apiUrl = "https://m8d6t6-3000.csb.app";
+
 export default function App() {
   const [show, setShow] = useState(false);
   const [squareList, setSquareList] = useState([]);
@@ -16,6 +18,30 @@ export default function App() {
       squareList[index] = { ...selectedSquare };
       setSquareList([...squareList]);
     }
+  }
+  function handleCreate() {
+    console.log(squareList);
+    fetch(apiUrl + "/api/picture", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(squareList),
+    })
+      .then((res) => {
+        console.log(res);
+        res.json();
+      })
+      .then((result) => {
+        console.log(result.id);
+        fetch(apiUrl + "/api/picture/" + result.id)
+          .then((res) => res.json())
+          .then((result) => {
+            console.log(result);
+          });
+      });
   }
 
   return (
@@ -51,17 +77,20 @@ export default function App() {
       <div onClick={() => setSelectedSquareIndex(null)} className="container">
         {squareList.map((el, index) => (
           <Square
+            key={index}
             el={el}
             index={index}
             selectedSquareIndex={selectedSquareIndex}
             setSelectedSquareIndex={setSelectedSquareIndex}
             handleUpdate={handleUpdate}
             mode={mode}
+            squareList={squareList}
+            setSquareList={setSquareList}
           />
         ))}
       </div>
 
-      <button>share</button>
+      <button onClick={handleCreate}>share</button>
     </div>
   );
 }
