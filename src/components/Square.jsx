@@ -7,6 +7,8 @@ export default function Square({
   setSelectedSquareIndex,
   handleUpdate,
   mode,
+  setSquareList,
+  squareList,
 }) {
   //   let {el, index} = props
   const [mousePos, setMousePos] = useState([0, 0]);
@@ -26,6 +28,18 @@ export default function Square({
       onClick={(e) => {
         e.stopPropagation();
         setSelectedSquareIndex(index);
+      }}
+      onDoubleClick={() => {
+        setSquareList(
+          squareList.concat({
+            color: el.color,
+            width: el.width,
+            height: el.height,
+            top: el.top + 25,
+            left: el.left + 25,
+          })
+        );
+        setSelectedSquareIndex(squareList.length);
       }}
       draggable
       // onDrag={(e) => {
@@ -114,3 +128,4 @@ export default function Square({
     </div>
   );
 }
+
